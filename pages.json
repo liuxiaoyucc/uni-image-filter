@@ -3,7 +3,9 @@
 		{
 			"path": "pages/index/index",
 			"style": {
-				"navigationBarTitleText": "uni-app"
+				"navigationBarBackgroundColor":"#000000",
+				"navigationBarTextStyle":"white",
+				"navigationBarTitleText": "图片处理"
 			}
 		},
 		{

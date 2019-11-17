@@ -1,22 +1,39 @@
 <template>
-	<view>
-		<view class='wrap'>
-		    <button @tap="choose">choose image</button>
-		    <!-- <button wx:if="{{selected}}" bindtap='filterTap'>filter</button> -->
-		    <view v-if="selected" class='picker-wrap'>
-		        <picker @change="bindPickerChange" :value="index" :range="picker_items">
-		            <view class="picker">
-		                当前选择：{{picker_items[index]}}
-		            </view>
-		        </picker>
-		    </view>
-		    <view class='time' v-if="gap">Processing time:{{gap}}ms</view>
+	<view class="page">
+		<view class="main-image">
+			<canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' :style="{width: upx2px(image.width)+ 'px', height: upx2px(image.height) +'px'}"></canvas>
+			<image class="upload-image" @tap="choose" v-if="!selected" src="../../static/tool_icon/upload_image.png"></image>
 		</view>
-		<!-- <canvas canvas-id='hehe' style='margin:0 auto;width:320px; height:640px; border:1px solid #ddd;'></canvas> -->
-		
-		<canvas canvas-id='hehe' :style="{width: upx2px(image.width)+ 'px', height: upx2px(image.height) +'px'}"></canvas>
-		
-		<button v-if="selected" @tap="save" class='save'>save</button>
+		<view style="background-color: #000000;display: flex;flex-direction: column;">
+			<scroll-view :animation="animationData" v-if="show_filter" scroll-x="true" class="operation-scroll">
+				<view class="operation-box">
+					<view class="operation-item" @tap="filter_choose(id)" v-for="(name, id) in filter_obj" :key="id">
+						<image :class="id == active_item ? 'active-item':''" :src="'../../static/tool_icon/' + id +'.jpg'" mode="aspectFill" class="filter"></image>
+						<text class="filter-name">{{name}}</text>
+					</view>
+				</view>
+			</scroll-view>
+			<view class="toolbar">
+				
+				<view class="actions">
+					<view class="action" @tap="filter">
+						<image src="../../static/tool_icon/filter.png" class="action-icon"></image>
+					</view>
+					<view class="action">
+						<image src="../../static/tool_icon/rotate.png" class="action-icon"></image>
+					</view>
+					<view class="action">
+						<image src="../../static/tool_icon/tailor.png" class="action-icon"></image>
+					</view>
+					<view class="action">
+						<image src="../../static/tool_icon/beauty.png" class="action-icon"></image>
+					</view>
+					<view class="action">
+						<image src="../../static/tool_icon/edit.png" class="action-icon"></image>
+					</view>
+				</view>
+			</view>
+		</view>
 	</view>
 	
 </template>
@@ -195,27 +212,27 @@
 	    BrightnessContrastGimp: '高对比度1',
 	    BrightnessContrastPhotoshop: '高对比度2',
 	    Channels: '单色',
-	    ColorTransformFilter: '颜色变换滤波器',
-	    Desaturate: '冲淡',
-	    Dither: '抖动',
-	    Edge: '边缘',
-	    Emboss: '浮雕',
-	    Enrich: '丰富',
-	    Flip: '翻转',
-	    Gamma: '伽马',
-	    GrayScale: '灰度',
-	    HSLAdjustment: 'HSL调节',
-	    Invert: '反色',
-	    Mosaic: '马赛克',
-	    Oil: '油画',
-	    OpacityFilter: '不透明度',
-	    Posterize: '色调分离',
-	    Rescale: '缩放',
-	    Sepia: '褐色',
-	    Sharpen: '锐化',
-	    Solarize: '曝光',
-	    Transpose: '调换',
-	    Twril: '水波旋转'
+	    // ColorTransformFilter: '颜色变换滤波器',
+	    // Desaturate: '冲淡',
+	    // Dither: '抖动',
+	    // Edge: '边缘',
+	    // Emboss: '浮雕',
+	    // Enrich: '丰富',
+	    // Flip: '翻转',
+	    // Gamma: '伽马',
+	    // GrayScale: '灰度',
+	    // HSLAdjustment: 'HSL调节',
+	    // Invert: '反色',
+	    // Mosaic: '马赛克',
+	    // Oil: '油画',
+	    // OpacityFilter: '不透明度',
+	    // Posterize: '色调分离',
+	    // Rescale: '缩放',
+	    // Sepia: '褐色',
+	    // Sharpen: '锐化',
+	    // Solarize: '曝光',
+	    // Transpose: '调换',
+	    // Twril: '水波旋转'
 	}
 	
 	const keys = Object.keys(filters);
@@ -225,64 +242,89 @@
 	export default {
 		data() {
 			return {
-				selected: 0,
-				picker_items: [],
-				index: 0,
+				animationData: {},
+				src: '',
+				selected: false,
 				gap: 0,
-				
+				filter_obj: filter_obj,
+				active_item: 'original',
+				show_filter: false,
 				image: {
-					width: 610.6,
-					height: 610.6
+					width: 710,
+					height: 900
 				},
 			}
 		},
 		onLoad() {
 			this.picker_items = picker_items;
+			
+			
+		},
+		onShow() {
+			
 		},
 		methods: {
-			bindPickerChange(e) {
-				const z = this
-				let index = e.detail.value
-				this.index = index;
+			sliderChange(e) {
+				console.log(e);
+			},
+			
+			filter_choose(key) {
+				if (!this.src) {
+					this.$helper.toast('none', '请先上传图片', 2000, false, 'bottom');
+					return;
+				}
+				if (key == this.active_item) {
+					console.log('当前');
+					return;
+				}
+				
+				this.active_item = key;
 				
 				uni.showLoading({
-				    title: '正在加载...',
+				    title: '处理中...',
 				    mask: true
 				})
+				
 				let startTime = (new Date()).getTime()
 				let imageData = helper.createImageData()
-				let filtered = filters[keys[index]](imageData)
+				let filtered = filters[key](imageData)
 				
 				helper.putImageData(filtered, () => {
-				    uni.hideLoading()
+				    uni.hideLoading();
 				
 				    let endTime = (new Date()).getTime()
 				    let gap = (endTime - startTime)
-					z.gap = gap;
-				    
+					this.gap = gap;
 				})
 			},
 			choose() {
-			    const z = this
+			    
 			    uni.chooseImage({
 			        count: 1,
-			        success: function (res) {
+			        success:  (res)=> {
+						this.selected = true
+						uni.showLoading({
+							title: '加载中...',
+							mask: true
+						})
 			            if (res.tempFilePaths.length) {
-			                let path = res.tempFilePaths[0]
-			
+			                let path = res.tempFilePaths[0];
+							this.src = path;
 			                uni.getImageInfo({
 			                	src: path,
 			                	success: (image)=> {
-									console.log(image);
-			                		z.image.height = z.image.width * image.height / image.width;
+									
+			                		this.image.height = this.image.width * image.height / image.width;
+									
 			                		helper = new Helper({
-			                		    canvasId: 'hehe',
-			                		    width: z.upx2px(z.image.width),
-			                		    height: z.upx2px(z.image.height)
+			                		    canvasId: 'main_canvas',
+			                		    width: this.upx2px(this.image.width),
+			                		    height: this.upx2px(this.image.height)
 			                		})
 			                		helper.initCanvas(path, () => {
-			                		    z.selected = 1
-			                		})
+										uni.hideLoading();
+										console.log("cb");
+									})
 			                	    
 			                	}
 			                })
@@ -290,6 +332,9 @@
 			            }
 			        },
 			    })
+			},
+			filter() {
+				this.show_filter = !this.show_filter
 			},
 			upx2px(value) {
 				if (!value){
@@ -315,41 +360,95 @@
 </script>
 
 <style>
-	/* pages/index/index.wxss */
-	.wrap {
-	    height: 300rpx;
+	page {
+		background-color: #000000;
+	}
+	.page {
+		display: flex;
+		flex-direction: column;
+		width: 750upx;
+		justify-content: center;
+		align-items: center;
+	}
+	.main-image {
+		flex-direction: column;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		padding-bottom: 250upx;
+	}
+	.main-canvas {
+		
+	}
+	.upload-image {
+		height: 100upx;
+		width: 100upx;
+		margin-top: 500upx;
+	}
+	.operation-box {
+		/* position: fixed;
+		bottom: 80upx; */
+		display: flex;
+		padding-left: 10upx;
+		flex-direction: row;
+		height: 150upx;
+		width: 750upx;
+	}
+	.operation-scroll {
+		background-color: #171717;
+		position: fixed;
+		bottom: 80upx;
+		left: 0;
+		white-space: nowrap;
+		width: 750upx;
+		box-shadow:inset 0px 15px 2px -15px rgba(255, 255, 255, .4);
+	}
+	.operation-item {
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+		align-items: center;
+		padding: 10upx 10upx 0upx 10upx;
+		
+	}
+	.active-item {
+		border: 4upx solid #EE9A00;
+	}
+	.filter-name {
+		line-height: 36upx;
+		font-size: 24upx;
+		color: #e6e6e6;
+		font-weight: 600;
+	}
+	.filter {
+		width: 100upx;
+		height: 100upx;
+		border-radius: 10upx;
+	}
+	.toolbar {
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		background-color: #0F0F0F;
+		box-shadow:inset 0px 15px 5px -15px rgba(255, 255, 255, .4);
+	}
+	.actions {
+		display: flex;
+		align-items: center;
+		justify-content: center;
+		
+		height: 80upx;
+		width: 750upx;
+	}
+	.action {
+		display: flex;
+		flex: 1;
+		justify-content: center;
+		align-content: center;
+	}
+	.action-icon {
+		width: 40upx;
+		height: 40upx;
 	}
 	
-	.picker-wrap {
-	    width: 750rpx;
-	    height: 88rpx;
-	}
-	
-	.picker-wrap picker {
-	    width: 100%;
-	    height: 88rpx;
-	    border-bottom: 2rpx solid #ddd;
-	    display: flex;
-	    align-items: center;
-	    padding-left: 30rpx;
-	    font-size: 30rpx;
-	    background: #eee;
-	}
-	
-	.picker {
-	    width: 750rpx;
-	    text-align: center;
-	}
-	
-	.time {
-	    width: 750rpx;
-	    height: 88rpx;
-	    line-height: 88rpx;
-	    text-align: center;
-	    font-size: 30rpx;
-	}
-	
-	.save {
-	    margin-top: 30rpx;
-	}
 </style>

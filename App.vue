@@ -2,14 +2,6 @@
 	export default {
 		onLaunch: function() {
 			console.log('App Launch')
-			
-			uni.getSystemInfo({
-				success: function (res) {
-				    console.log(res);
-				}
-			})
-			console.log(plus.runtime);
-			
 		},
 		onShow: function() {
 			console.log('App Show')
