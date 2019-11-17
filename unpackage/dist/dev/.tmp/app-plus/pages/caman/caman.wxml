@@ -1,0 +1,1 @@
+<view><view class="wrap"><button data-event-opts="{{[['tap',[['choose',['$event']]]]]}}" bindtap="__e">choose image</button><block wx:if="{{gap}}"><view class="time">{{"Processing time:"+gap+"ms"}}</view></block></view><canvas style="width:300px;height:400px;background-color:#2C405A;" canvas-id="firstCanvas"></canvas></view>
