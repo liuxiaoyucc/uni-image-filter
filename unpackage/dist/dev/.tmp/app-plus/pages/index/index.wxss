@@ -55,11 +55,13 @@ page {
 	height: 150rpx;
 	width: 750rpx;
 }
-.operation-scroll {
-	background-color: #171717;
+.scroll {
 	position: fixed;
-	bottom: 80rpx;
+	bottom: -150rpx;
 	left: 0;
+	background-color: #171717;
+}
+.operation-scroll {
 	white-space: nowrap;
 	width: 750rpx;
 	-webkit-box-shadow:inset 0px 15px 2px -15px rgba(255, 255, 255, .4);
@@ -110,25 +112,28 @@ page {
 	-webkit-box-align: center;
 	-webkit-align-items: center;
 	        align-items: center;
-	-webkit-box-pack: center;
-	-webkit-justify-content: center;
-	        justify-content: center;
-	
+	-webkit-box-pack: justify;
+	-webkit-justify-content: space-between;
+	        justify-content: space-between;
 	height: 80rpx;
 	width: 750rpx;
 }
 .action {
+	height: 80rpx;
+	width: 120rpx;
 	display: -webkit-box;
 	display: -webkit-flex;
 	display: flex;
-	-webkit-box-flex: 1;
-	-webkit-flex: 1;
-	        flex: 1;
+	-webkit-box-orient: vertical;
+	-webkit-box-direction: normal;
+	-webkit-flex-direction: column;
+	        flex-direction: column;
 	-webkit-box-pack: center;
 	-webkit-justify-content: center;
 	        justify-content: center;
-	-webkit-align-content: center;
-	        align-content: center;
+	-webkit-box-align: center;
+	-webkit-align-items: center;
+	        align-items: center;
 }
 .action-icon {
 	width: 40rpx;

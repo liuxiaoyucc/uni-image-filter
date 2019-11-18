@@ -5,21 +5,23 @@
 			<image class="upload-image" @tap="choose" v-if="!selected" src="../../static/tool_icon/upload_image.png"></image>
 		</view>
 		<view style="background-color: #000000;display: flex;flex-direction: column;">
-			<scroll-view :animation="animationData" v-if="show_filter" scroll-x="true" class="operation-scroll">
-				<view class="operation-box">
-					<view class="operation-item" @tap="filter_choose(id)" v-for="(name, id) in filter_obj" :key="id">
-						<image :class="id == active_item ? 'active-item':''" :src="'../../static/tool_icon/' + id +'.jpg'" mode="aspectFill" class="filter"></image>
-						<text class="filter-name">{{name}}</text>
+			<view :animation="animationData" class="scroll">
+				<scroll-view scroll-x="true" class="operation-scroll">
+					<view class="operation-box">
+						<view class="operation-item" @tap="filter_choose(id)" v-for="(name, id) in filter_obj" :key="id">
+							<image :class="id == active_item ? 'active-item':''" :src="'../../static/tool_icon/' + id +'.jpg'" mode="aspectFill" class="filter"></image>
+							<text class="filter-name">{{name}}</text>
+						</view>
 					</view>
-				</view>
-			</scroll-view>
+				</scroll-view>
+			</view>
 			<view class="toolbar">
 				
 				<view class="actions">
 					<view class="action" @tap="filter">
 						<image src="../../static/tool_icon/filter.png" class="action-icon"></image>
 					</view>
-					<view class="action">
+					<view class="action" @tap="rotate">
 						<image src="../../static/tool_icon/rotate.png" class="action-icon"></image>
 					</view>
 					<view class="action">
@@ -243,6 +245,7 @@
 		data() {
 			return {
 				animationData: {},
+				animation: {},
 				src: '',
 				selected: false,
 				gap: 0,
@@ -258,6 +261,10 @@
 		onLoad() {
 			this.picker_items = picker_items;
 			
+			this.animation = uni.createAnimation({
+				duration: 300
+			})
+
 			
 		},
 		onShow() {
@@ -325,6 +332,8 @@
 										uni.hideLoading();
 										console.log("cb");
 									})
+									
+									
 			                	    
 			                	}
 			                })
@@ -334,7 +343,20 @@
 			    })
 			},
 			filter() {
-				this.show_filter = !this.show_filter
+				let limit = this.show_filter ? 230 : -230;
+				
+				
+				this.animation.translateY(uni.upx2px(limit)).step()
+				this.animationData = this.animation.export()
+				this.show_filter = !this.show_filter;
+			},
+			rotate() {
+				//图片旋转
+				if (!this.src) {
+					this.$helper.toast('none', '请先上传图片', 2000, false, 'bottom');
+					return;
+				}
+				this.$helper.toast('none', '暂未开放', 2000, false, 'bottom');
 			},
 			upx2px(value) {
 				if (!value){
@@ -394,11 +416,13 @@
 		height: 150upx;
 		width: 750upx;
 	}
-	.operation-scroll {
-		background-color: #171717;
+	.scroll {
 		position: fixed;
-		bottom: 80upx;
+		bottom: -150upx;
 		left: 0;
+		background-color: #171717;;
+	}
+	.operation-scroll {
 		white-space: nowrap;
 		width: 750upx;
 		box-shadow:inset 0px 15px 2px -15px rgba(255, 255, 255, .4);
@@ -409,7 +433,6 @@
 		justify-content: center;
 		align-items: center;
 		padding: 10upx 10upx 0upx 10upx;
-		
 	}
 	.active-item {
 		border: 4upx solid #EE9A00;
@@ -435,16 +458,17 @@
 	.actions {
 		display: flex;
 		align-items: center;
-		justify-content: center;
-		
+		justify-content: space-between;
 		height: 80upx;
 		width: 750upx;
 	}
 	.action {
+		height: 80upx;
+		width: 120upx;
 		display: flex;
-		flex: 1;
+		flex-direction: column;
 		justify-content: center;
-		align-content: center;
+		align-items: center;
 	}
 	.action-icon {
 		width: 40upx;

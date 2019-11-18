@@ -41,6 +41,7 @@ Helper.prototype.saveImageData = function(cb) {
 Helper.prototype.initCanvas = function(tempFilePath, cb) {
     const z = this
     const ctx = wx.createCanvasContext(z.canvasInfo.canvasId)
+	
     ctx.drawImage(tempFilePath, 0, 0, z.canvasInfo.width, z.canvasInfo.height)
     ctx.draw(false, () => {
         console.log('draw done')
@@ -103,6 +104,21 @@ Helper.prototype.getImageTempFilePath = function (cb) {
             cb(res.tempFilePath)
         }
     })
+}
+
+
+//下面是扩展的功能
+Helper.prototype.rotateCanvas = function (rotate, cb) {
+	const z = this
+	console.log(z.canvasInfo);
+	
+	this.ctx.translate(0, z.canvasInfo.width)
+	this.ctx.rotate(20 * Math.PI / 180)
+	// this.ctx.draw()
+	z.getImageTempFilePath((path)=> {
+		z.initCanvas(path);
+	});
+	
 }
 
 module.exports = Helper
