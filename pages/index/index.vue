@@ -2,7 +2,9 @@
 	<view class="page">
 		<view class="main-image">
 			<canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' :style="{width: upx2px(image.width)+ 'px', height: upx2px(image.height) +'px'}"></canvas>
+			<!-- <canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' style="width: 408px;height: 816px"></canvas> -->
 			<image class="upload-image" @tap="choose" v-if="!selected" src="../../static/tool_icon/upload_image.png"></image>
+			<button @tap="save">保存</button>
 		</view>
 		<view style="background-color: #000000;display: flex;flex-direction: column;">
 			<view :animation="animationData" class="scroll">
@@ -123,7 +125,7 @@
 	    Flip: function (data) {
 	        // ImageFilters.Flip (srcImageData, vertical)
 	        // vertical{Boolean}
-	        return ImageFilters.Flip(data, 0)
+	        return ImageFilters.Flip(data, 1);// 传1即旋转180°
 	    },
 	    Gamma: function (data) {
 	        // ImageFilters.Gamma (srcImageData, gamma)
@@ -201,6 +203,9 @@
 	        // smooth{Boolean}
 	        return ImageFilters.Twril(data, 0.5, 0.5, 120, 90, 0, true)
 	    },
+		Rotate: function (data) {
+			return ImageFilters.Rotate(data, 90);
+		}
 	}
 	
 	
@@ -220,7 +225,8 @@
 	    // Edge: '边缘',
 	    // Emboss: '浮雕',
 	    // Enrich: '丰富',
-	    // Flip: '翻转',
+	    Flip: '翻转',
+		Rotate: '旋转',
 	    // Gamma: '伽马',
 	    // GrayScale: '灰度',
 	    // HSLAdjustment: 'HSL调节',
@@ -233,7 +239,7 @@
 	    // Sepia: '褐色',
 	    // Sharpen: '锐化',
 	    // Solarize: '曝光',
-	    // Transpose: '调换',
+	    Transpose: '调换',
 	    // Twril: '水波旋转'
 	}
 	
@@ -256,6 +262,11 @@
 					width: 710,
 					height: 900
 				},
+				// image: {
+				// 	width: 10,
+				// 	height: 10
+				// },
+				rotate_angle: 0,
 			}
 		},
 		onLoad() {
@@ -294,6 +305,7 @@
 				
 				let startTime = (new Date()).getTime()
 				let imageData = helper.createImageData()
+				
 				let filtered = filters[key](imageData)
 				
 				helper.putImageData(filtered, () => {
@@ -321,8 +333,23 @@
 			                	src: path,
 			                	success: (image)=> {
 									
-			                		this.image.height = this.image.width * image.height / image.width;
+			      //           		this.image.height = this.image.width * image.height / image.width;
 									
+									// helper = new Helper({
+									//     canvasId: 'main_canvas',
+									//     width: this.image.width,
+									//     height: this.image.height
+									// })
+									// helper.initCanvas(path, () => {
+									// 	uni.hideLoading();
+									// 	console.log("cb");
+									// })
+									
+									
+									this.image.height = this.image.width * image.height / image.width;
+									console.log(image);
+									console.log(this.upx2px(this.image.width));
+									console.log(this.upx2px(this.image.height));
 			                		helper = new Helper({
 			                		    canvasId: 'main_canvas',
 			                		    width: this.upx2px(this.image.width),
@@ -356,7 +383,8 @@
 					this.$helper.toast('none', '请先上传图片', 2000, false, 'bottom');
 					return;
 				}
-				this.$helper.toast('none', '暂未开放', 2000, false, 'bottom');
+				helper.rotateCanvas();
+				// this.$helper.toast('none', '暂未开放', 2000, false, 'bottom');
 			},
 			upx2px(value) {
 				if (!value){

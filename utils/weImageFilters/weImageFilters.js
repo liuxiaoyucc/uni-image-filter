@@ -280,9 +280,7 @@ ImageFilters.Translate = function(srcImageData, x, y, interpolation) {
 ImageFilters.Scale = function(srcImageData, scaleX, scaleY, interpolation) {
 
 };
-ImageFilters.Rotate = function(srcImageData, originX, originY, angle, resize, interpolation) {
 
-};
 ImageFilters.Affine = function(srcImageData, matrix, resize, interpolation) {
 
 };
@@ -382,6 +380,7 @@ ImageFilters.ConvolutionFilter = function(srcImageData, matrixX, matrixY, matrix
  * @param threshold 0.0 <= n <= 1.0
  */
 ImageFilters.Binarize = function(srcImageData, threshold) {
+	
     var srcPixels = srcImageData.data,
         srcWidth = srcImageData.width,
         srcHeight = srcImageData.height,
@@ -1416,8 +1415,46 @@ ImageFilters.Enrich = function(srcImageData) {
         0, -2, 0
     ], 10, -40);
 };
-
+ImageFilters.Rotate = function(srcImageData) {
+	
+	console.log(srcImageData.width);
+	console.log(srcImageData.height);
+	// var srcPixels = srcImageData.data,
+	//     srcWidth = srcImageData.width,
+	//     srcHeight = srcImageData.height,
+	//     srcLength = srcPixels.length,
+	//     dstImageData = this.utils.createImageData(srcWidth, srcHeight),
+	//     dstPixels = dstImageData.data;
+	var srcPixels = srcImageData.data,
+	    srcWidth = srcImageData.width,
+	    srcHeight = srcImageData.height,
+	    srcLength = srcPixels.length,
+	    dstImageData = this.utils.createImageData(srcWidth, srcHeight),
+	    dstPixels = dstImageData.data;
+	console.log(srcWidth);
+	console.log(srcHeight);
+	console.log(dstPixels.length);
+	console.log(srcPixels.length);
+	
+	var x, y, srcIndex, dstIndex, i;
+	for (y = 0; y < srcHeight; y += 1) {
+	    for (x = 0; x < srcWidth; x += 1) {
+	        srcIndex = (y * srcWidth + x) << 2;
+			// console.log(srcIndex);
+	        dstIndex = ((srcHeight - y - 1) + srcHeight * x) << 2;
+	
+	        dstPixels[dstIndex] = srcPixels[srcIndex];
+	        dstPixels[dstIndex + 1] = srcPixels[srcIndex + 1];
+	        dstPixels[dstIndex + 2] = srcPixels[srcIndex + 2];
+	        dstPixels[dstIndex + 3] = srcPixels[srcIndex + 3];
+	    }
+	}
+	console.log(dstImageData.data.length);
+	return dstImageData;
+	
+};
 ImageFilters.Flip = function(srcImageData, vertical) {
+	console.log(srcImageData);
     var srcPixels = srcImageData.data,
         srcWidth = srcImageData.width,
         srcHeight = srcImageData.height,
@@ -1427,9 +1464,14 @@ ImageFilters.Flip = function(srcImageData, vertical) {
 
     var x, y, srcIndex, dstIndex, i;
 
+	// console.log(srcLength);
+	// console.log(srcWidth, srcHeight);
+	// console.log(dstPixels);
+	
     for (y = 0; y < srcHeight; y += 1) {
         for (x = 0; x < srcWidth; x += 1) {
             srcIndex = (y * srcWidth + x) << 2;
+			// console.log(srcIndex);
             if (vertical) {
                 dstIndex = ((srcHeight - y - 1) * srcWidth + x) << 2;
             } else {
@@ -1442,7 +1484,7 @@ ImageFilters.Flip = function(srcImageData, vertical) {
             dstPixels[dstIndex + 3] = srcPixels[srcIndex + 3];
         }
     }
-
+	// console.log(dstImageData);
     return dstImageData;
 };
 

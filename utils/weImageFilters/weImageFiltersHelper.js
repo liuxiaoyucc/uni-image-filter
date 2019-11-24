@@ -14,6 +14,7 @@ let Helper = function(options) {
 
 // 保存当前的画布像素信息到 originalImageData
 Helper.prototype.saveImageData = function(cb) {
+	
     const z = this
 
     // 获取canvas像素数据
@@ -73,6 +74,7 @@ Helper.prototype.createImageData = function() {
 
 Helper.prototype.putImageData = function(imageData, cb) {
     const z = this
+	console.log(imageData.data.length);
     // 将像素数据绘制到画布
     wx.canvasPutImageData({
         canvasId: z.canvasInfo.canvasId,
@@ -81,6 +83,7 @@ Helper.prototype.putImageData = function(imageData, cb) {
         y: 0,
         width: z.canvasInfo.width,
         height: z.canvasInfo.height,
+		// height: z.canvasInfo.width,
         complete: res => {
             if (cb) {
                 cb()
@@ -108,16 +111,25 @@ Helper.prototype.getImageTempFilePath = function (cb) {
 
 
 //下面是扩展的功能
-Helper.prototype.rotateCanvas = function (rotate, cb) {
+Helper.prototype.rotateCanvas = function () {
 	const z = this
-	console.log(z.canvasInfo);
+	const canvas = wx.createCanvasContext(z.canvasInfo.canvasId)
+	console.log(canvas);
+	let init_rotate = 0;
+	let width = z.canvasInfo.width;
+	let height = z.canvasInfo.height;
+	/**
+	 * 0 || 360: 
+	 * 90度: (长, 0) 顶部朝向右侧
+	 * 180度 || -180度: (长, 宽)
+	 * -90度 || 270度: (0, 宽) 顶部朝向左侧
+	 */
+	canvas.translate(z.canvasInfo.width, 0);
+	canvas.rotate(90 * Math.PI / 180);
+	canvas.drawImage(z.originalImageData, 0, 0, z.canvasInfo.height, z.canvasInfo.width);
 	
-	this.ctx.translate(0, z.canvasInfo.width)
-	this.ctx.rotate(20 * Math.PI / 180)
-	// this.ctx.draw()
-	z.getImageTempFilePath((path)=> {
-		z.initCanvas(path);
-	});
+	canvas.draw()
+	z.saveImageData();
 	
 }
 
