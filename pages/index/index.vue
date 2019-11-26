@@ -1,8 +1,8 @@
 <template>
 	<view class="page">
 		<view class="main-image">
-			<canvas v-if="selected" :width="canvas.origin_width" :height="canvas.origin_height" class="main-canvas" canvas-id='main_canvas' :style="{width: upx2px(canvas.width)+ 'px', height: upx2px(canvas.height) +'px'}"></canvas>
-			<!-- <canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' style="width: 408px;height: 816px"></canvas> -->
+			<!-- <canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' :style="{width: upx2px(canvas.width)+ 'px', height: upx2px(canvas.height) +'px'}"></canvas> -->
+			<canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' style="width: 700upx;height: 650upx;"></canvas>
 			<image class="upload-image" @tap="choose" v-if="!selected" src="../../static/tool_icon/upload_image.png"></image>
 			<button @tap="save">保存</button>
 		</view>
@@ -336,16 +336,17 @@
 			                	src: path,
 			                	success: (image)=> {
 									
-									this.canvas.height = this.canvas.width * image.height / image.width;
-									this.canvas.origin_width = image.width;
-									this.canvas.origin_height = image.height;
+									// this.canvas.height = this.canvas.width * image.height / image.width;
+									
 									console.log(image);
 									console.log(this.upx2px(this.canvas.width));
 									console.log(this.upx2px(this.canvas.height));
 			                		helper = new Helper({
 			                		    canvasId: 'main_canvas',
-			                		    width: this.upx2px(this.canvas.width),
-			                		    height: this.upx2px(this.canvas.height)
+			                		    // width: this.upx2px(this.canvas.width),
+			                		    // height: this.upx2px(this.canvas.height)
+										width: 800,
+										height: 650
 			                		})
 			                		helper.initCanvas(path, () => {
 										uni.hideLoading();

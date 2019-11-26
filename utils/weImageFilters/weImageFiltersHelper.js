@@ -42,7 +42,7 @@ Helper.prototype.saveImageData = function(cb) {
 Helper.prototype.initCanvas = function(tempFilePath, cb) {
     const z = this
     const ctx = wx.createCanvasContext(z.canvasInfo.canvasId)
-	
+	// ctx.scale(0.5, 0.5)
     ctx.drawImage(tempFilePath, 0, 0, z.canvasInfo.width, z.canvasInfo.height)
     ctx.draw(false, () => {
         console.log('draw done')

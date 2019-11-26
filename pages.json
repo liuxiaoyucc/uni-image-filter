@@ -20,7 +20,11 @@
 		{
 		    "path" : "pages/math/math",
 		    "style" : {}
+		},{
+		    "path" : "pages/canvas/canvas",
+		    "style" : {}
 		}
+        
         
     ],
 	"globalStyle": {
