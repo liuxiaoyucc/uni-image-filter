@@ -75,6 +75,7 @@ Helper.prototype.createImageData = function() {
 Helper.prototype.putImageData = function(imageData, cb) {
     const z = this
 	console.log(imageData.data.length);
+	console.log(z.canvasInfo);
     // 将像素数据绘制到画布
     wx.canvasPutImageData({
         canvasId: z.canvasInfo.canvasId,
@@ -100,8 +101,8 @@ Helper.prototype.getImageTempFilePath = function (cb) {
         y: 0,
         width: z.canvasInfo.width,
         height: z.canvasInfo.height,
-        destWidth: z.canvasInfo.width,
-        destHeight: z.canvasInfo.height,
+        // destWidth: z.canvasInfo.width,
+        // destHeight: z.canvasInfo.height,
         canvasId: z.canvasInfo.canvasId,
         success: function (res) {
             cb(res.tempFilePath)
@@ -112,6 +113,8 @@ Helper.prototype.getImageTempFilePath = function (cb) {
 
 //下面是扩展的功能
 Helper.prototype.rotateCanvas = function () {
+	console.log(this.canvasInfo);
+	return;
 	const z = this
 	const canvas = wx.createCanvasContext(z.canvasInfo.canvasId)
 	console.log(canvas);

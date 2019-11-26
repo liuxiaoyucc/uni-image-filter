@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		<view class="main-image">
-			<canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' :style="{width: upx2px(image.width)+ 'px', height: upx2px(image.height) +'px'}"></canvas>
+			<canvas v-if="selected" :width="canvas.origin_width" :height="canvas.origin_height" class="main-canvas" canvas-id='main_canvas' :style="{width: upx2px(canvas.width)+ 'px', height: upx2px(canvas.height) +'px'}"></canvas>
 			<!-- <canvas v-if="selected" class="main-canvas" canvas-id='main_canvas' style="width: 408px;height: 816px"></canvas> -->
 			<image class="upload-image" @tap="choose" v-if="!selected" src="../../static/tool_icon/upload_image.png"></image>
 			<button @tap="save">保存</button>
@@ -125,7 +125,7 @@
 	    Flip: function (data) {
 	        // ImageFilters.Flip (srcImageData, vertical)
 	        // vertical{Boolean}
-	        return ImageFilters.Flip(data, 1);// 传1即旋转180°
+	        return ImageFilters.Flip(data, 1);
 	    },
 	    Gamma: function (data) {
 	        // ImageFilters.Gamma (srcImageData, gamma)
@@ -258,9 +258,11 @@
 				filter_obj: filter_obj,
 				active_item: 'original',
 				show_filter: false,
-				image: {
+				canvas: {
 					width: 710,
-					height: 900
+					height: 900,
+					origin_width: 0,
+					origin_height: 0,
 				},
 				// image: {
 				// 	width: 10,
@@ -276,7 +278,7 @@
 				duration: 300
 			})
 
-			
+			console.log(uni.getSystemInfoSync());
 		},
 		onShow() {
 			
@@ -320,6 +322,7 @@
 			    
 			    uni.chooseImage({
 			        count: 1,
+					sizeType: ['original'],
 			        success:  (res)=> {
 						this.selected = true
 						uni.showLoading({
@@ -333,27 +336,16 @@
 			                	src: path,
 			                	success: (image)=> {
 									
-			      //           		this.image.height = this.image.width * image.height / image.width;
-									
-									// helper = new Helper({
-									//     canvasId: 'main_canvas',
-									//     width: this.image.width,
-									//     height: this.image.height
-									// })
-									// helper.initCanvas(path, () => {
-									// 	uni.hideLoading();
-									// 	console.log("cb");
-									// })
-									
-									
-									this.image.height = this.image.width * image.height / image.width;
+									this.canvas.height = this.canvas.width * image.height / image.width;
+									this.canvas.origin_width = image.width;
+									this.canvas.origin_height = image.height;
 									console.log(image);
-									console.log(this.upx2px(this.image.width));
-									console.log(this.upx2px(this.image.height));
+									console.log(this.upx2px(this.canvas.width));
+									console.log(this.upx2px(this.canvas.height));
 			                		helper = new Helper({
 			                		    canvasId: 'main_canvas',
-			                		    width: this.upx2px(this.image.width),
-			                		    height: this.upx2px(this.image.height)
+			                		    width: this.upx2px(this.canvas.width),
+			                		    height: this.upx2px(this.canvas.height)
 			                		})
 			                		helper.initCanvas(path, () => {
 										uni.hideLoading();
@@ -383,8 +375,8 @@
 					this.$helper.toast('none', '请先上传图片', 2000, false, 'bottom');
 					return;
 				}
+				
 				helper.rotateCanvas();
-				// this.$helper.toast('none', '暂未开放', 2000, false, 'bottom');
 			},
 			upx2px(value) {
 				if (!value){
@@ -393,6 +385,10 @@
 				return uni.upx2px(value);
 			},
 			save() {
+				if (!this.src) {
+					this.$helper.toast('none', '请先上传图片', 2000, false, 'bottom');
+					return;
+				}
 			    helper.getImageTempFilePath(tempFilePath => {
 			        // 保存到相册
 			        uni.saveImageToPhotosAlbum({

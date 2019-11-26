@@ -1415,7 +1415,7 @@ ImageFilters.Enrich = function(srcImageData) {
         0, -2, 0
     ], 10, -40);
 };
-ImageFilters.Rotate = function(srcImageData) {
+ImageFilters.Rotate = function(srcImageData, angle) {
 	
 	console.log(srcImageData.width);
 	console.log(srcImageData.height);
@@ -1441,7 +1441,12 @@ ImageFilters.Rotate = function(srcImageData) {
 	    for (x = 0; x < srcWidth; x += 1) {
 	        srcIndex = (y * srcWidth + x) << 2;
 			// console.log(srcIndex);
-	        dstIndex = ((srcHeight - y - 1) + srcHeight * x) << 2;
+			if (angle == 90) {
+				dstIndex = ((srcHeight - y - 1) + srcHeight * x) << 2;
+			}else {
+				dstIndex = ((srcHeight - y - 1) + srcHeight * x) << 2;
+			}
+	        
 	
 	        dstPixels[dstIndex] = srcPixels[srcIndex];
 	        dstPixels[dstIndex + 1] = srcPixels[srcIndex + 1];
