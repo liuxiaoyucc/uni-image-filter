@@ -1,68 +1,121 @@
 <template>
 	<view>
-		<view style="display: flex;flex-direction: row;">
-			<image class="image" src="../../static/2.jpg"></image>
-			<canvas canvas-id="canvas" class="canvas"></canvas>
+		<view style="display: flex;flex-direction: row;justify-content: center;">
+			<canvas canvas-id="canvas" class="canvas" :style="{width: upx2px(canvas.width)+ 'px', height: upx2px(canvas.height) +'px'}"></canvas>
 			<!-- <canvas canvas-id="canvas_test" style="width: 50px;height: 50px;background-color: #007AFF;"></canvas> -->
 		</view>
-		<button @click="test">TEST</button>
+		<button @click="rotate">rotate</button>
 		<button @click="save">save</button>
 	</view>
 </template>
 
 <script>
+	import ImageFilters from '../../utils/weImageFilters/weImageFilters.js';
+	import Helper from '../../utils/weImageFilters/weImageFiltersHelper.js';
 	export default {
 		data() {
 			return {
+				src: '/static/4.jpg',
 				ctx: {},
+				canvas: {
+					width: 650,
+					height: 1300,
+					origin_width: 650,
+					origin_height: 1300,
+				},
+				angle: 0,
+			}
+		},
+		onReady() {
+			uni.getImageInfo({
+				src: this.src,
+				success: (image)=> {
+					console.log(image);
+					this.canvas.height = this.canvas.width * image.height / image.width;
+					this.canvas.origin_height = this.canvas.height;
+				    this.ctx = uni.createCanvasContext('canvas');
+				    // this.ctx.scale(1,1)
+				    
+				    this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
+				    this.ctx.draw();
+				},
+				fail: (e) => {
+					console.log(e);
+				}
+			})
+			// try {
+			// 	this.ctx = uni.createCanvasContext('canvas');
+			// 	// this.ctx.scale(1,1)
 
+			// 	this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
+			// 	this.ctx.draw();
+			// } catch (e) {
+			// 	console.log(e);
+			// }
+		},
+		computed: {
+			px_width() {
+				return this.upx2px(this.canvas.width);
+			},
+			px_height() {
+				return this.upx2px(this.canvas.height);
+			},
+			scale() { //宽高比
+				return this.canvas.width / this.canvas.height;
+			},
+			reverse_scale() {
+				return this.canvas.height / this.canvas.width;
 			}
 		},
 		methods: {
-			test() {
-				console.log(111);
-				try {
-					uni.canvasGetImageData({
-						canvasId: 'canvas',
-						x: 0,
-						y: 0,
-						width: 10,
-						height: 50,
-						success(res) {
-
-							// console.log(11111);
-							console.log(res.data);
-							console.log(res.width) // 100
-							console.log(res.height) // 100
-							console.log(res.data instanceof Uint8ClampedArray) // true
-							console.log(res.data.length) // 100 * 100 * 4
-
-							uni.canvasPutImageData({
-								canvasId: 'canvas_test',
-								x: 0,
-								y: 0,
-								width: 10,
-
-								data: res.data,
-								success(res) {
-									console.log(res);
-								},
-								fail(e) {
-									console.log(e);
-								}
-							})
-
-						}
-					})
-				} catch (e) {
-					console.log(e);
+			rotate() {
+				this.angle = this.angle == 270 ? 0 : this.angle + 90;
+				//先使用scale等比缩放
+				let scale = this.scale
+				let reverse_scale = this.reverse_scale;
+				console.log(this.angle);
+				switch (this.angle){
+					case 90:
+						this.canvas.height = this.canvas.width * scale;
+						
+						this.ctx.translate(this.px_width, 0);
+						this.ctx.rotate(this.angle * Math.PI / 180);
+						this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
+						break;
+					case 180: 
+						this.canvas.height = this.canvas.origin_height;
+						this.ctx.translate(this.px_width, this.px_height);
+						this.ctx.rotate(this.angle * Math.PI / 180);
+						this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
+						
+						break;
+					case 270:
+						this.canvas.height = this.canvas.width * scale;
+						this.ctx.translate(0, this.px_height);
+						this.ctx.rotate(this.angle * Math.PI / 180);
+						this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
+						break;
+					default:
+						this.canvas.height = this.canvas.origin_height;
+						this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
+						break;
 				}
+				console.log(2);
+				
+				// #ifdef H5
+				setTimeout(()=> {
+					this.ctx.draw()
+				}, 100);
+				// #endif
+				// #ifndef H5
+				this.ctx.draw()
+				// #endif
 			},
 			save() {
 				uni.canvasToTempFilePath({
 					x: 0,
 					y: 0,
-					canvasId: 'canvas_test',
+					canvasId: 'canvas',
 					success: function(res) {
 						// 在H5平台下，tempFilePath 为 base64
 						console.log(res.tempFilePath)
@@ -74,20 +127,15 @@
 						});
 					}
 				})
-			}
+			},
+			upx2px(value) {
+				if (!value) {
+					return 0;
+				}
+				return uni.upx2px(value);
+			},
 		},
-		onLoad() {
 
-		},
-		onReady() {
-			try {
-				this.ctx = uni.createCanvasContext('canvas');
-				this.ctx.drawImage('../../static/2.jpg', 0, 0, 360, 720);
-				this.ctx.draw();
-			} catch (e) {
-				console.log(e);
-			}
-		}
 	}
 </script>
 
@@ -96,5 +144,9 @@
 		width: 180px;
 		height: 360px;
 	}
-	
+
+	.canvas {
+		/* background-color: #007AFF; */
+		border: 1px solid #007AFF;
+	}
 </style>

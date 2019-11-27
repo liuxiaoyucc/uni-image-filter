@@ -122,10 +122,11 @@ Helper.prototype.rotateCanvas = function () {
 	let width = z.canvasInfo.width;
 	let height = z.canvasInfo.height;
 	/**
+	 * translate: 
 	 * 0 || 360: 
-	 * 90度: (长, 0) 顶部朝向右侧
+	 * 90度: (宽, 0) 顶部朝向右侧
 	 * 180度 || -180度: (长, 宽)
-	 * -90度 || 270度: (0, 宽) 顶部朝向左侧
+	 * -90度 || 270度: (0, 高) 顶部朝向左侧
 	 */
 	canvas.translate(z.canvasInfo.width, 0);
 	canvas.rotate(90 * Math.PI / 180);

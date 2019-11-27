@@ -1416,9 +1416,6 @@ ImageFilters.Enrich = function(srcImageData) {
     ], 10, -40);
 };
 ImageFilters.Rotate = function(srcImageData, angle) {
-	
-	console.log(srcImageData.width);
-	console.log(srcImageData.height);
 	// var srcPixels = srcImageData.data,
 	//     srcWidth = srcImageData.width,
 	//     srcHeight = srcImageData.height,
