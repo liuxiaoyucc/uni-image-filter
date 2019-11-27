@@ -6,11 +6,17 @@
 			<!-- <canvas canvas-id="canvas_test" style="width: 50px;height: 50px;background-color: #007AFF;"></canvas> -->
 			<!-- </view> -->
 		</scroll-view>
+		<view>
+			<image :src="render_src" style="width: 750upx;" mode="widthFix" :animation="animationData"></image>
+		</view>
 		
-		<image :src="render_src" style="width: 750upx;" mode="widthFix"></image>
 
 		<view style="position: fixed;bottom: 0;width: 750upx;">
-			<button @click="rotate">rotate</button>
+			<view class="row">
+				<button @click="rotate">rotate</button>
+				<button @click="render_rotate">draw</button>
+			</view>
+			
 			<button @click="save">save</button>
 			<button @click="upload">reupload</button>
 			<view class="row">
@@ -33,6 +39,7 @@
 	export default {
 		data() {
 			return {
+				animationData: '',
 				src: '',
 				render_src: '',
 				temp_images: {
@@ -53,7 +60,14 @@
 				},
 				
 				angle: 0,
+				temp_angle: 0,
 			}
+		},
+		onLoad() {
+			this.animation = uni.createAnimation();
+		},
+		onUnload() {
+			this.animationData = '';
 		},
 		onReady() {
 			this.upload();
@@ -139,20 +153,22 @@
 				this.left -= 50;
 			},
 			rotate() {
-				this.angle = this.angle == 270 ? 0 : this.angle + 90;
-				//先使用scale等比缩放
-				let scale = this.scale
-				let reverse_scale = this.reverse_scale;
+				this.temp_angle += 90;
+				let scale = this.temp_angle % 180 == 0 ? 1 : 2
+				console.log(this.temp_angle);
+				this.animation.rotate(this.temp_angle).scale(scale).step()
+				this.animationData = this.animation.export()
+			},
+			render_rotate() {
+				this.angle = this.temp_angle % 360;
 				
 				switch (this.angle) {
 					case 90:
-						
-						// this.canvas.height = this.canvas.width * scale;
+						console.log(11111111);
 						this.canvas.width = this.canvas.height;
 						this.canvas.height = this.canvas.origin_width;
 						this.ctx.translate(this.px_width, 0);
 						this.ctx.rotate(this.angle * Math.PI / 180);
-						
 						this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
 						break;
 					case 180:
@@ -161,12 +177,10 @@
 						this.ctx.translate(this.px_width, this.px_height);
 						this.ctx.rotate(this.angle * Math.PI / 180);
 						this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
-
 						break;
 					case 270:
 						this.canvas.width = this.canvas.height;
 						this.canvas.height = this.canvas.origin_width;
-
 						this.ctx.translate(0, this.px_height);
 						this.ctx.rotate(this.angle * Math.PI / 180);
 						this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
@@ -178,19 +192,9 @@
 						break;
 				}
 
-
-				// #ifdef H5
-				setTimeout(() => {
-					this.ctx.draw(false, ()=> {
-						this.render_image_to_show();
-					});
-				}, 100);
-				// #endif
-				// #ifndef H5
 				this.ctx.draw(false, ()=> {
-					this.render_image_to_show();
+					console.log('canvas渲染完成');
 				});
-				// #endif
 			},
 			render_image_to_show() {
 				console.log(this.temp_images);
@@ -208,15 +212,24 @@
 						}
 					})
 				}
+				// this.temp_angle = 0;
 				
 			},
 			save() {
-				uni.saveImageToPhotosAlbum({
-					filePath: this.render_src,
-					success: function() {
-						console.log('save success');
+				uni.canvasToTempFilePath({
+					x: 0,
+					y: 0,
+					canvasId: 'canvas',
+					success: (res)=> {
+						uni.saveImageToPhotosAlbum({
+							filePath: res.tempFilePath,
+							success: function() {
+								console.log('save success');
+							}
+						});
 					}
-				});
+				})
+				
 			},
 			upx2px(value) {
 				if (!value) {
