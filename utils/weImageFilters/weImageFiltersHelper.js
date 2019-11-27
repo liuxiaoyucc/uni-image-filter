@@ -112,29 +112,47 @@ Helper.prototype.getImageTempFilePath = function (cb) {
 
 
 //下面是扩展的功能
-Helper.prototype.rotateCanvas = function () {
-	console.log(this.canvasInfo);
-	return;
-	const z = this
-	const canvas = wx.createCanvasContext(z.canvasInfo.canvasId)
-	console.log(canvas);
-	let init_rotate = 0;
-	let width = z.canvasInfo.width;
-	let height = z.canvasInfo.height;
-	/**
-	 * translate: 
-	 * 0 || 360: 
-	 * 90度: (宽, 0) 顶部朝向右侧
-	 * 180度 || -180度: (长, 宽)
-	 * -90度 || 270度: (0, 高) 顶部朝向左侧
-	 */
-	canvas.translate(z.canvasInfo.width, 0);
-	canvas.rotate(90 * Math.PI / 180);
-	canvas.drawImage(z.originalImageData, 0, 0, z.canvasInfo.height, z.canvasInfo.width);
+Helper.prototype.rotateCanvas = function (angle, scale) {
 	
-	canvas.draw()
-	z.saveImageData();
+	console.log(angle);
+	switch (angle){
+		case 90:
+			this.canvas.height = this.canvas.width * scale;
+			
+			this.ctx.translate(this.px_width, 0);
+			this.ctx.rotate(angle * Math.PI / 180);
+			this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
+			break;
+		case 180: 
+			this.canvas.height = this.canvas.origin_height;
+			this.ctx.translate(this.px_width, this.px_height);
+			this.ctx.rotate(angle * Math.PI / 180);
+			this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
+			
+			break;
+		case 270:
+			this.canvas.height = this.canvas.width * scale;
+			this.ctx.translate(0, this.px_height);
+			this.ctx.rotate(angle * Math.PI / 180);
+			this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
+			break;
+		default:
+			this.canvas.height = this.canvas.origin_height;
+			this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
+			break;
+	}
 	
+	
+	
+	
+	// #ifdef H5
+	setTimeout(()=> {
+		this.ctx.draw()
+	}, 100);
+	// #endif
+	// #ifndef H5
+	this.ctx.draw()
+	// #endif
 }
 
 module.exports = Helper
