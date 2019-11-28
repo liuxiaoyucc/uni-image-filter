@@ -7,7 +7,7 @@
 
 		<view style="height: 100vh;background-color: #DD524D;display: flex;flex-direction: column;justify-content: center;align-items: center;">
 			<view :animation="render_image_animationData">
-				<image :animation="render_image_animationData2" :src="render_src" :style="{width: render_image.width + 'px', height: render_image.height +'px'}"></image>
+				<image :src="render_src" :style="{width: render_image.width + 'px', height: render_image.height +'px'}"></image>
 			</view>
 		</view>
 
@@ -448,18 +448,24 @@
 					this.reset_render_image();
 					
 					this.render_src = tempFilePath;
+					// this.render_src = tempFilePath;
 					let endTime = (new Date()).getTime()
 					let gap = (endTime - startTime)
 					this.gap = gap;
 				})
 			},
 			reset_render_image() {
-				return;
+				
+				// return;
 				console.log(this.angle);
 				console.log(this.render_image);
-				
-				this.render_image_animation.rotate(this.angle - 90).scale(1/this.scale).step({duration: 0})
+				// this.render_image.width = this.render_image.width ^ this	.render_image.height;
+				// this.render_image.width = this.render_image.width ^ this.render_image.height;
+				this.render_image_animation.rotate(0).scale(1).step({duration: 0})
 				this.render_image_animationData = this.render_image_animation.export()
+				this.angle = this.temp_angle = 0;
+				this.render_image.height = this.render_image.width * (1/this.scale);
+				console.log(this.render_image.height);
 				return;
 				this.render_image_animation.rotate(0, 0)
 					.scale(1)
@@ -468,50 +474,7 @@
 					})
 				this.render_image_animationData = this.render_image_animation.export()
 			},
-			choose() {
-
-				uni.chooseImage({
-					count: 1,
-					sizeType: ['original'],
-					success: (res) => {
-						this.selected = true
-						uni.showLoading({
-							title: '加载中...',
-							mask: true
-						})
-						if (res.tempFilePaths.length) {
-							let path = res.tempFilePaths[0];
-							this.src = path;
-							uni.getImageInfo({
-								src: path,
-								success: (image) => {
-
-									// this.canvas.height = this.canvas.width * image.height / image.width;
-
-									console.log(image);
-									console.log(this.upx2px(this.canvas.width));
-									console.log(this.upx2px(this.canvas.height));
-									helper = new Helper({
-										canvasId: 'canvas',
-										// width: this.upx2px(this.canvas.width),
-										// height: this.upx2px(this.canvas.height)
-										width: 800,
-										height: 650
-									})
-									helper.initCanvas(path, () => {
-										uni.hideLoading();
-										console.log("cb");
-									})
-
-
-
-								}
-							})
-
-						}
-					},
-				})
-			},
+			
 			filter() {
 				//这里将旋转后的图片绘制到canvas
 				if (!this.rendered) {
@@ -525,7 +488,7 @@
 				this.rendered = false;
 				this.show_filter = false;
 				this.temp_angle += 90;
-
+				this.angle += 90;
 				let temp_scale = this.temp_angle % 180 == 0 ? 1 : (this.render_image.max_width / this.render_image.height).toFixed(
 					2);
 
@@ -536,19 +499,21 @@
 				this.render_image_animationData = this.render_image_animation.export()
 			},
 			render_rotate() {
-				this.angle = this.temp_angle % 360;
+				this.angle = this.angle % 360;
 				let angle = this.angle;
-				let translate_x, translate_y, draw_width, draw_height;
+				
+				let translate_x, translate_y, draw_width, draw_height, d_width, d_height;
+				console.log(this.canvas);
 				switch (angle) {
 					case 90:
 					case 270:
 						console.log('90 || 270');
-						this.canvas.width = this.canvas.height;
+						this.canvas.width = this.canvas.origin_height;
 						this.canvas.height = this.canvas.origin_width;
 						translate_x = angle / 90 == 1 ? this.px_width : 0;
 						translate_y = translate_x ? 0 : this.px_height;
 						draw_width = this.px_height;
-						draw_height = this.px_width
+						draw_height = this.px_width;
 						break;
 					case 180:
 					case 0:
@@ -568,10 +533,14 @@
 					default:
 						break;
 				}
-				console.log(angle, translate_x, translate_y, draw_width, draw_height);
-				helper.rotateCanvas(this.render_src, angle, translate_x, translate_y, draw_width, draw_height, ()=> {
+				console.log(this.canvas);
+				d_width = this.upx2px(this.canvas.height);
+				d_height = this.upx2px(this.canvas.width);
+				console.log(angle, translate_x, translate_y, draw_width, draw_height, d_width, d_height);
+				helper.rotateCanvas(this.render_src, angle, translate_x, translate_y, draw_width, draw_height, d_width, d_height, ()=> {
 					console.log('canvas渲染完成ok');
 					this.rendered = true;
+					
 				});
 			},
 			upx2px(value) {
