@@ -41,10 +41,10 @@ Helper.prototype.saveImageData = function(cb) {
 // 初始化画布内容
 Helper.prototype.initCanvas = function(tempFilePath, cb) {
     const z = this
-    const ctx = wx.createCanvasContext(z.canvasInfo.canvasId)
-	// ctx.scale(0.5, 0.5)
-    ctx.drawImage(tempFilePath, 0, 0, z.canvasInfo.width, z.canvasInfo.height)
-    ctx.draw(false, () => {
+    this.ctx = uni.createCanvasContext(z.canvasInfo.canvasId)
+	
+    this.ctx.drawImage(tempFilePath, 0, 0, z.canvasInfo.width, z.canvasInfo.height)
+    this.ctx.draw(false, () => {
         console.log('draw done')
         z.saveImageData(cb)
     })
@@ -86,23 +86,24 @@ Helper.prototype.putImageData = function(imageData, cb) {
         height: z.canvasInfo.height,
 		// height: z.canvasInfo.width,
         complete: res => {
-            if (cb) {
-                cb()
-            }
+			z.getImageTempFilePath((tempFilePath)=> {
+				if (cb) {
+				    cb(tempFilePath)
+				}
+			})
+            
         }
     })
 }
 
+
+
 Helper.prototype.getImageTempFilePath = function (cb) {
     const z = this
     // 将画布内容保存为图片
-    wx.canvasToTempFilePath({
+    uni.canvasToTempFilePath({
         x: 0,
         y: 0,
-        width: z.canvasInfo.width,
-        height: z.canvasInfo.height,
-        // destWidth: z.canvasInfo.width,
-        // destHeight: z.canvasInfo.height,
         canvasId: z.canvasInfo.canvasId,
         success: function (res) {
             cb(res.tempFilePath)
@@ -112,47 +113,17 @@ Helper.prototype.getImageTempFilePath = function (cb) {
 
 
 //下面是扩展的功能
-Helper.prototype.rotateCanvas = function (angle, scale) {
+Helper.prototype.rotateCanvas = function (tempFilePath,angle, translate_x, translate_y, draw_width, draw_height, cb) {
+	console.log(angle, translate_x, translate_y, draw_width, draw_height);
+	this.ctx.translate(translate_x, translate_y);
+	this.ctx.rotate(angle * Math.PI / 180);
+	this.ctx.drawImage(tempFilePath, 0, 0, draw_width, draw_height);
 	
-	console.log(angle);
-	switch (angle){
-		case 90:
-			this.canvas.height = this.canvas.width * scale;
-			
-			this.ctx.translate(this.px_width, 0);
-			this.ctx.rotate(angle * Math.PI / 180);
-			this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
-			break;
-		case 180: 
-			this.canvas.height = this.canvas.origin_height;
-			this.ctx.translate(this.px_width, this.px_height);
-			this.ctx.rotate(angle * Math.PI / 180);
-			this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
-			
-			break;
-		case 270:
-			this.canvas.height = this.canvas.width * scale;
-			this.ctx.translate(0, this.px_height);
-			this.ctx.rotate(angle * Math.PI / 180);
-			this.ctx.drawImage(this.src, 0, 0, this.px_height, this.px_width);
-			break;
-		default:
-			this.canvas.height = this.canvas.origin_height;
-			this.ctx.drawImage(this.src, 0, 0, this.px_width, this.px_height);
-			break;
-	}
-	
-	
-	
-	
-	// #ifdef H5
 	setTimeout(()=> {
-		this.ctx.draw()
+		this.ctx.draw(false, ()=> {
+			cb && cb();
+		});
 	}, 100);
-	// #endif
-	// #ifndef H5
-	this.ctx.draw()
-	// #endif
 }
 
 module.exports = Helper
