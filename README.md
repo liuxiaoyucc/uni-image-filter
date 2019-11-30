@@ -4,6 +4,6 @@
 uniapp图片处理
 
 # Thanks
-[tomfriwel/weImageFilters](https://github.com/tomfriwel/weImageFilters)
-[arahaya/ImageFilters.js](https://github.com/arahaya/ImageFilters.js)
-[picas](https://github.com/djyde/Picas)
+	- [tomfriwel/weImageFilters](https://github.com/tomfriwel/weImageFilters)
+	- [arahaya/ImageFilters.js](https://github.com/arahaya/ImageFilters.js)
+	- [picas](https://github.com/djyde/Picas)
