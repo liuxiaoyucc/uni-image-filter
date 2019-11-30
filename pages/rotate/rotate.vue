@@ -18,7 +18,7 @@
 			</view>
 			
 			<button @click="save">save</button>
-			<button @click="upload">reupload</button>
+			<button @click="upload">choose image</button>
 			<view class="row">
 				<button @click="down">down</button>
 				<button @click="up">up</button>
@@ -79,7 +79,7 @@
 			this.animationData = '';
 		},
 		onReady() {
-			this.upload();
+			// this.upload();
 			
 			// try {
 			// 	this.ctx = uni.createCanvasContext('canvas');

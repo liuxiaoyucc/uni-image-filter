@@ -1,14 +1,20 @@
 {
 	"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
-		
 		{
 			"path": "pages/index/index",
 			"style": {
+				
 				"navigationBarBackgroundColor":"#000000",
 				"navigationBarTextStyle":"white",
-				"navigationBarTitleText": "图片处理"
+				"navigationBarTitleText": " "
+			}
+		},{
+		    "path" : "pages/rotate/rotate",
+		    "style" : {
+				"navigationBarTitleText": "图片旋转"
 			}
 		},
+		
 		{
 		    "path" : "pages/caman/caman",
 		    "style" : {}
@@ -23,13 +29,24 @@
 		},{
 		    "path" : "pages/css_rotate/css_rotate",
 		    "style" : {}
-		},{
-		    "path" : "pages/canvas/canvas",
-		    "style" : {}
 		}
-        
-        
-        
+        ,{
+            "path" : "pages/get_started/get_started",
+            "style" : {
+				"navigationStyle": "custom",
+				"navigationBarBackgroundColor":"#000000",
+				"navigationBarTextStyle":"white",
+				"navigationBarTitleText": ""
+			}
+        }
+        ,{
+            "path" : "pages/preview/preview",
+            "style" : {
+				"navigationBarBackgroundColor":"#000000",
+				"navigationBarTextStyle":"white",
+				"navigationBarTitleText": "PREVIEW"
+			}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
