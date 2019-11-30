@@ -10,8 +10,8 @@
 			<view class="row">
 				<image class="item" @tap="get_started('filter')" src="../../static/filter.png" mode="widthFix"></image>
 			</view>
-			<view class="row" @tap="rotate">
-				<image class="item" @tap="get_started('rotate')" src="../../static/rotate.png" mode="widthFix"></image>
+			<view class="row">
+				<image class="item" @tap="rotate('rotate')" src="../../static/rotate.png" mode="widthFix"></image>
 			</view>
 			<view class="row">
 				<image class="item" @tap="get_started('scale')" src="../../static/scale.png" mode="widthFix"></image>
@@ -19,12 +19,6 @@
 			<view class="row">
 				<image class="item" @tap="get_started('cropper')" src="../../static/cropper.png" mode="widthFix"></image>
 			</view>
-			<!-- <button @tap="to_handle">综合</button>
-			<button @tap="to_rotate">旋转</button>
-			<button @tap="to_rotate">滤镜</button>
-			<button>放缩</button>
-			<button>裁剪</button>
-			<button>美颜</button> -->
 		</view>
 		
 	</view>
@@ -38,17 +32,13 @@
 				
 			}
 		},
-		onLoad() {},
-		onUnload() {},
-		onReady() {},
-		watch: {},
-		computed: {},
+		
 		methods: {
 			get_started(from) {
-				this.$helper.to("../preview/preview?from=" + from)
+				this.$helper.to("../get_started/get_started?from=" + from)
 			},
-			rotate() {
-				this.$helper.to('../rotate/rotate')
+			rotate(from) {
+				this.$helper.to("../rotate/rotate?from=" + from)
 			}
 		}
 	}

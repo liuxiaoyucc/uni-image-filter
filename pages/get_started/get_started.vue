@@ -7,7 +7,7 @@
 
 		<view class="render-area">
 			<view :animation="render_image_animationData">
-				<image :src="render_src" :style="{width: render_image.width + 'px', height: render_image.height +'px'}"></image>
+				<image v-if="render_src" :src="render_src" :style="{width: render_image.width + 'px', height: render_image.height +'px'}"></image>
 			</view>
 			<view v-if="!render_src">
 				<image @tap="upload" style="width: 100upx;height: 100upx;" src="../../static/tool_icon/upload_image.png"></image>
@@ -294,10 +294,6 @@
 			}
 		},
 		onLoad(options) {
-			console.log(options);
-			this.from = options.from;
-			this.src = options.image_src;
-			this.render_src = options.image_src;
 			
 			//盲人分袜子
 			let socks = [0, 0, 1, 1, 1, 0, 0, 1];
@@ -321,9 +317,13 @@
 			this.system = uni.getSystemInfoSync();
 			this.render_image.max_height = this.system.windowHeight
 
-			console.log(uni.getSystemInfoSync());
-			
-			this.init_image();
+			console.log(options);
+			this.from = options.from;
+			if (options.image_src) {
+				this.src = decodeURIComponent(options.image_src);
+				this.render_src = decodeURIComponent(options.image_src);
+				this.init_image();
+			}
 		},
 		onUnload() {
 			this.filters_animationData = '';
@@ -403,11 +403,13 @@
 				
 						console.log(this.canvas);
 						console.log(this.render_image);
+						console.log('aaaaaaa');
 						helper = new Helper({
 							canvasId: 'canvas',
 							width: this.upx2px(this.canvas.width),
 							height: this.upx2px(this.canvas.height)
 						})
+						console.log('vvvvvvvvvv');
 						// this.ctx = uni.createCanvasContext('canvas');
 						helper.initCanvas(this.src, () => {
 							console.log('initCanvas');
@@ -459,7 +461,7 @@
 					mask: true
 				})
 
-				let startTime = (new Date()).getTime()
+				
 				let imageData = helper.createImageData()
 
 				let filtered = filters[key](imageData)
@@ -468,35 +470,13 @@
 					uni.hideLoading();
 
 					console.log(this.render_image);
-					this.reset_render_image();
 					
 					this.render_src = tempFilePath;
-					
-					let endTime = (new Date()).getTime()
-					let gap = (endTime - startTime)
-					this.gap = gap;
+					console.log(tempFilePath);
+
 				})
 			},
-			reset_render_image() {
-				
-				return;
-				console.log(this.angle);
-				console.log(this.render_image);
-				// this.render_image.width = this.render_image.width ^ this	.render_image.height;
-				// this.render_image.width = this.render_image.width ^ this.render_image.height;
-				this.render_image_animation.rotate(0).scale(1).step({duration: 0})
-				this.render_image_animationData = this.render_image_animation.export()
-				this.angle = this.temp_angle = 0;
-				this.render_image.height = this.render_image.width * (1/this.scale);
-				console.log(this.render_image.height);
-				return;
-				this.render_image_animation.rotate(0, 0)
-					.scale(1)
-					.step({
-						duration: 0
-					})
-				this.render_image_animationData = this.render_image_animation.export()
-			},
+			
 			
 			filter() {
 				this.show_filter = !this.show_filter;
@@ -593,15 +573,8 @@
 				this.$helper.toast('loading', '保存中...', 10000);
 				this.render_rotate(()=> {
 					helper.getImageTempFilePath((tempFilePath)=> {
-						this.$helper.to("../preview/preview?from=" + this.from + '&image_src=' + encodeURIComponent(tempFilePath))
+						this.$helper.redirect_to("../preview/preview?from=" + this.from + '&image_src=' + encodeURIComponent(tempFilePath))
 						uni.hideToast();
-						// uni.saveImageToPhotosAlbum({
-						// 	filePath: tempFilePath,
-						// 	success: res => {
-						// 		uni.hideToast();
-						// 		this.$helper.toast('success', '保存成功');
-						// 	}
-						// })
 					})
 				})
 				console.log(this.angle);

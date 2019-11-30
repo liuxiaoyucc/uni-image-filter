@@ -1428,16 +1428,13 @@ ImageFilters.Rotate = function(srcImageData, angle) {
 	    srcLength = srcPixels.length,
 	    dstImageData = this.utils.createImageData(srcWidth, srcHeight),
 	    dstPixels = dstImageData.data;
-	console.log(srcWidth);
-	console.log(srcHeight);
-	console.log(dstPixels.length);
-	console.log(srcPixels.length);
+
 	
 	var x, y, srcIndex, dstIndex, i;
 	for (y = 0; y < srcHeight; y += 1) {
 	    for (x = 0; x < srcWidth; x += 1) {
 	        srcIndex = (y * srcWidth + x) << 2;
-			// console.log(srcIndex);
+			
 			if (angle == 90) {
 				dstIndex = ((srcHeight - y - 1) + srcHeight * x) << 2;
 			}else {
@@ -1451,12 +1448,12 @@ ImageFilters.Rotate = function(srcImageData, angle) {
 	        dstPixels[dstIndex + 3] = srcPixels[srcIndex + 3];
 	    }
 	}
-	console.log(dstImageData.data.length);
+	
 	return dstImageData;
 	
 };
 ImageFilters.Flip = function(srcImageData, vertical) {
-	console.log(srcImageData);
+	
     var srcPixels = srcImageData.data,
         srcWidth = srcImageData.width,
         srcHeight = srcImageData.height,
@@ -1466,14 +1463,11 @@ ImageFilters.Flip = function(srcImageData, vertical) {
 
     var x, y, srcIndex, dstIndex, i;
 
-	// console.log(srcLength);
-	// console.log(srcWidth, srcHeight);
-	// console.log(dstPixels);
 	
     for (y = 0; y < srcHeight; y += 1) {
         for (x = 0; x < srcWidth; x += 1) {
             srcIndex = (y * srcWidth + x) << 2;
-			// console.log(srcIndex);
+			
             if (vertical) {
                 dstIndex = ((srcHeight - y - 1) * srcWidth + x) << 2;
             } else {
@@ -1486,7 +1480,7 @@ ImageFilters.Flip = function(srcImageData, vertical) {
             dstPixels[dstIndex + 3] = srcPixels[srcIndex + 3];
         }
     }
-	// console.log(dstImageData);
+	
     return dstImageData;
 };
 
@@ -1520,7 +1514,7 @@ ImageFilters.GrayScale = function(srcImageData) {
         dstPixels[i] = dstPixels[i + 1] = dstPixels[i + 2] = intensity;
         dstPixels[i + 3] = srcPixels[i + 3];
     }
-    // console.log(dstImageData)
+    
 
     return dstImageData;
 };

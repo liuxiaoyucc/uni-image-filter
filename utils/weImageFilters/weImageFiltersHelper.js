@@ -1,6 +1,7 @@
 const ImageFilters = require('./weImageFilters.js')
 
 let Helper = function(options) {
+	console.log(options);
     /**
      * options{canvasId, width, height}
      */
@@ -25,7 +26,7 @@ Helper.prototype.saveImageData = function(cb) {
         width: z.canvasInfo.width,
         height: z.canvasInfo.height,
         success: res => {
-            // console.log(res)
+            
             let {
                 data
             } = res
@@ -45,7 +46,7 @@ Helper.prototype.initCanvas = function(tempFilePath, cb) {
 	
     this.ctx.drawImage(tempFilePath, 0, 0, z.canvasInfo.width, z.canvasInfo.height)
     this.ctx.draw(false, () => {
-        console.log('draw done')
+        
         z.saveImageData(cb)
     })
 }
@@ -68,15 +69,14 @@ Helper.prototype.updateCanvasInfo = function (options) {
 
 // 从originalImageData创建 imageData
 Helper.prototype.createImageData = function() {
-	console.log(this.canvasInfo);
+	
     const z = this
     return ImageFilters.utils.createImageDataFromData(z.originalImageData, z.canvasInfo.width, z.canvasInfo.height)
 }
 
 Helper.prototype.putImageData = function(imageData, cb) {
     const z = this
-	console.log(imageData.data.length);
-	console.log(z.canvasInfo);
+
     // 将像素数据绘制到画布
     wx.canvasPutImageData({
         canvasId: z.canvasInfo.canvasId,
@@ -85,7 +85,6 @@ Helper.prototype.putImageData = function(imageData, cb) {
         y: 0,
         width: z.canvasInfo.width,
         height: z.canvasInfo.height,
-		// height: z.canvasInfo.width,
         complete: res => {
 			z.getImageTempFilePath((tempFilePath)=> {
 				if (cb) {
@@ -115,7 +114,7 @@ Helper.prototype.getImageTempFilePath = function (cb) {
 
 //下面是扩展的功能
 Helper.prototype.rotateCanvas = function (tempFilePath, angle, translate_x, translate_y, draw_width, draw_height, c_width, c_height, cb) {
-	console.log(angle, translate_x, translate_y, draw_width, draw_height,c_width, c_height);
+	
 	this.ctx.translate(translate_x, translate_y);
 	this.ctx.rotate(angle * Math.PI / 180);
 	this.ctx.drawImage(tempFilePath, 0, 0, draw_width, draw_height);
