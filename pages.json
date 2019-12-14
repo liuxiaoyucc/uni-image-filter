@@ -67,7 +67,6 @@
         		}
             }]
     }],
-	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

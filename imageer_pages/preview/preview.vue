@@ -37,15 +37,18 @@
 		},
 		methods: {
 			home() {
-				this.$helper.relaunch('../index/index')
+				try{
+					this.$helper.relaunch('../../pages/index/index')
+				}catch(e){
+					console.log(e);
+				}
 			},
 			to_continue() {
 				if (!this.image_src) {
 					this.$helper.toast('none', '请先选择图片', 2000, false, 'bottom');
 					return;
 				}
-				this.$helper.to('../' + this.from + '/' + this.from + '?from=' + this.from + '&image_src=' + encodeURIComponent(
-					this.image_src))
+				this.$helper.to('../' + this.from + '/' + this.from + '?from=' + this.from + '&image_src=' + encodeURIComponent(this.image_src))
 			},
 			save() {
 				uni.saveImageToPhotosAlbum({

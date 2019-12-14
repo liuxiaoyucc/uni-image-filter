@@ -1,7 +1,7 @@
 <template>
 	<view class="page">
 		
-		<view v-for="(rbs, index) in rubbish" :key="index" style="margin: 30rpx 0;display: flex;flex-direction: column;justify-content: center;">
+		<view v-for="(rbs, index) in rubbish" :key="index" class="rbs">
 			<text :style="{fontSize: rbs.font_size + 'rpx', color: rbs.font_color}">{{rbs.content}}</text>
 			<view class="line">
 				<view style="width: 5rpx; height: 5rpx;" :style="{backgroundColor: rbs.font_color}"></view>
@@ -9,7 +9,6 @@
 		</view>
 		<view class="footer">
 			<view class="footer-button">
-				<!-- <text class="font-100 footer-text">+</text> -->
 				<image class="image" src="../../static/1.png"></image>
 			</view>
 		</view>
@@ -52,6 +51,12 @@
 		flex-direction: column;
 		padding: 0 20rpx;
 	}
+	.rbs {
+		margin: 30rpx 0;
+		display: flex;
+		flex-direction: column;
+		justify-content: center;
+	}
 	.line {
 		height: 5rpx;
 		width: 710rpx;
@@ -60,36 +65,8 @@
 		justify-content: center;
 		align-items: center;
 	}
-	.font-30 {
-		font-size: 30rpx;
-	}
-	.font-50 {
-		font-size: 50rpx;
-	}
-	.font-100 {
-		font-size: 100rpx;
-	}
-	.font-40 {
-		font-size: 40rpx;
-	}
-	.FF6A6A {
-		color: #FF6A6A;
-	}
-	.DC143C {
-		color: #DC143C
-	}
-	.B0E2FF {
-		color: #B0E2FF;
-	}
-	.B8860B {
-		color: #B8860B;
-	}
-	.blue {
-		color: #0000FF;
-	}
-	.green {
-		color: #008000;
-	}
+	
+	
 	.footer {
 		position: fixed;
 		left: 0;
