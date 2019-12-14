@@ -48,6 +48,10 @@
 				"navigationBarTitleText": "PREVIEW"
 			}
         }
+        ,{
+            "path" : "pages/testpage/testpage",
+            "style" : {}
+        }
     ],
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
