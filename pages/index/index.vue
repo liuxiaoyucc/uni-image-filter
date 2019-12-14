@@ -1,24 +1,23 @@
 <template>
 	<view class="page">
 		<view class="top">
-			<image class="logo" src="../../static/imageer.png" mode="widthFix"></image>
+			<image class="logo" src="../../static/Ashcan.png" mode="widthFix"></image>
 		</view>
 		<view class="content">
 			<view class="main-row" @tap="get_started('get_started')">
-				<image class="main-item" src="../../static/get_started.png" mode="widthFix"></image>
+				<image class="main-item" src="../../static/tools.png" mode="widthFix"></image>
 			</view>
+			
 			<view class="row">
-				<image class="item" @tap="get_started('filter')" src="../../static/filter.png" mode="widthFix"></image>
+				<image class="item" @tap="to_avatar" src="../../static/avatar.png" mode="widthFix"></image>
 			</view>
+			
 			<view class="row">
-				<image class="item" @tap="rotate('rotate')" src="../../static/rotate.png" mode="widthFix"></image>
+				<image class="item" @tap="to_soliloquy" src="../../static/soliloquy.png" mode="widthFix"></image>
 			</view>
-			<view class="row">
-				<image class="item" @tap="get_started('scale')" src="../../static/scale.png" mode="widthFix"></image>
-			</view>
-			<view class="row">
-				<image class="item" @tap="get_started('cropper')" src="../../static/cropper.png" mode="widthFix"></image>
-			</view>
+		</view>
+		<view class="footer">
+			<image class="footer-image" @tap="to_festival" src="../../static/Christmas.png"></image>
 		</view>
 		
 	</view>
@@ -37,8 +36,14 @@
 			get_started(from) {
 				this.$helper.to("../get_started/get_started?from=" + from)
 			},
-			rotate(from) {
-				this.$helper.to("../rotate/rotate?from=" + from)
+			to_avatar() {
+				this.$helper.toast('none', 'coming soon...', 2000, false, 'bottom');
+			},
+			to_soliloquy() {
+				this.$helper.toast('none', 'coming soon...', 2000, false, 'bottom');
+			},
+			to_festival() {
+				this.$helper.toast('none', 'coming soon...', 2000, false, 'bottom');
 			}
 		}
 	}
@@ -48,10 +53,24 @@
 	page {
 		background-color: #000000;
 	}
+	.footer {
+		display: flex;
+		justify-content: center;
+		position: fixed;
+		bottom: 0;
+		left: 0;
+		width: 750rpx;
+		background-color: #000000;
+	}
+	.footer-image {
+		width: 600rpx;
+		height: 150rpx;
+	}
 	.content {
 		width: 750upx;
 		display: flex;
 		flex-direction: column;
+		margin-bottom: 150rpx;
 	}
 	.top {
 		width: 750upx;
@@ -66,7 +85,6 @@
 		display: flex;
 		justify-content: center;
 		/* background-color: #007AFF; */
-		padding: 20upx 0;
 	}
 	.row {
 		width: 750upx;

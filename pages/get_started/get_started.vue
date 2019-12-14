@@ -4,7 +4,14 @@
 			<canvas canvas-id="canvas" class="canvas" :style="{width: upx2px(canvas.width)+ 'px', height: upx2px(canvas.height) +'px'}"></canvas>
 		</scroll-view>
 
-
+		<!-- <movable-area class="render-area">
+			<movable-view scale :style="{width: render_image.width + 'px', height: render_image.height +'px'}" direction="all">
+				<view :animation="render_image_animationData">
+					<image v-if="render_src" :src="render_src" :style="{width: render_image.width + 'px', height: render_image.height +'px'}"></image>
+				</view>
+			</movable-view>
+		</movable-area> -->
+	
 		<view class="render-area">
 			<view :animation="render_image_animationData">
 				<image v-if="render_src" :src="render_src" :style="{width: render_image.width + 'px', height: render_image.height +'px'}"></image>
@@ -620,6 +627,7 @@
 		align-items: center;
 	}
 	.render-area {
+		width: 750rpx;
 		height: 100vh;
 		display: flex;
 		flex-direction: column;
