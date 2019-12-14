@@ -447,6 +447,12 @@
 						this.src = res.tempFilePaths[0]
 						this.render_src = this.src;
 						this.init_image();
+						// #ifdef MP-WEIXIN
+						setTimeout(()=> {
+							this.init_image();
+						}, 300);
+						// #endif
+						
 					}
 				})
 			},

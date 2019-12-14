@@ -8,51 +8,66 @@
 				"navigationBarTextStyle":"white",
 				"navigationBarTitleText": " "
 			}
-		},{
-		    "path" : "pages/rotate/rotate",
-		    "style" : {
-				"navigationBarTitleText": "图片旋转"
-			}
 		},
-		
-		{
-		    "path" : "pages/caman/caman",
-		    "style" : {}
-		},
-		{
-            "path" : "pages/cropper/cropper",
-            "style" : {}
-        },
 		{
 		    "path" : "pages/math/math",
 		    "style" : {}
-		},{
-		    "path" : "pages/css_rotate/css_rotate",
-		    "style" : {}
 		}
-        ,{
-            "path" : "pages/get_started/get_started",
-            "style" : {
-				"navigationStyle": "custom",
-				"navigationBarBackgroundColor":"#000000",
-				"navigationBarTextStyle":"white",
-				"navigationBarTitleText": ""
-			}
-        }
-        ,{
-            "path" : "pages/preview/preview",
-            "style" : {
-				"navigationStyle": "custom",
-				"navigationBarBackgroundColor":"#000000",
-				"navigationBarTextStyle":"white",
-				"navigationBarTitleText": "PREVIEW"
-			}
-        }
-        ,{
-            "path" : "pages/testpage/testpage",
-            "style" : {}
-        }
     ],
+	"subPackages": [{
+        "root": "imageer_pages",
+		"pages": [ //pages数组中第一项表示应用启动页，参考：https://uniapp.dcloud.io/collocation/pages
+			{
+			    "path" : "rotate/rotate",
+			    "style" : {
+					"navigationBarTitleText": "图片旋转"
+				}
+			},
+			{
+			    "path" : "caman/caman",
+			    "style" : {
+					"navigationBarTitleText": "caman"
+				}
+			},
+			{
+		        "path" : "cropper/cropper",
+		        "style" : {}
+		    },
+			{
+			    "path" : "css_rotate/css_rotate",
+			    "style" : {}
+			}
+		    ,{
+		        "path" : "get_started/get_started",
+		        "style" : {
+					"navigationStyle": "custom",
+					"navigationBarBackgroundColor":"#000000",
+					"navigationBarTextStyle":"white",
+					"navigationBarTitleText": ""
+				}
+		    }
+		    ,{
+		        "path" : "preview/preview",
+		        "style" : {
+					"navigationStyle": "custom",
+					"navigationBarBackgroundColor":"#000000",
+					"navigationBarTextStyle":"white",
+					"navigationBarTitleText": "PREVIEW"
+				}
+		    }
+		]
+    }, {
+        "root": "soliloquy_pages",
+        "pages": [{
+                "path" : "soliloquy/soliloquy",
+                "style" : {
+        			"navigationBarBackgroundColor":"#000000",
+        			"navigationBarTextStyle":"white",
+        			"navigationBarTitleText": "垃圾话"
+        		}
+            }]
+    }],
+	
 	"globalStyle": {
 		"navigationBarTextStyle": "black",
 		"navigationBarTitleText": "uni-app",

@@ -34,13 +34,13 @@
 		
 		methods: {
 			get_started(from) {
-				this.$helper.to("../get_started/get_started?from=" + from)
+				this.$helper.to("../../imageer_pages/get_started/get_started?from=" + from)
 			},
 			to_avatar() {
 				this.$helper.toast('none', 'coming soon...', 2000, false, 'bottom');
 			},
 			to_soliloquy() {
-				this.$helper.toast('none', 'coming soon...', 2000, false, 'bottom');
+				this.$helper.to('../../soliloquy_pages/soliloquy/soliloquy');
 			},
 			to_festival() {
 				this.$helper.toast('none', 'coming soon...', 2000, false, 'bottom');

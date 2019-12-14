@@ -1,0 +1,23 @@
+{
+  "name": "uni-image-filter",
+  "version": "1.0.0",
+  "description": "![imageer](https://user-images.githubusercontent.com/33248133/69893725-bac4ea00-1350-11ea-8972-328376876ef4.png)",
+  "main": "main.js",
+  "dependencies": {
+    "wx-caman": "^1.0.1"
+  },
+  "devDependencies": {},
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/liuxiaoyucc/uni-image-filter.git"
+  },
+  "author": "xyliu",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/liuxiaoyucc/uni-image-filter/issues"
+  },
+  "homepage": "https://github.com/liuxiaoyucc/uni-image-filter#readme"
+}
